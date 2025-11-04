@@ -37,7 +37,7 @@ stages {
             sh '''
             docker network create movie_net || true
             docker rm -f movie_db 
-            docker volume rm postgres_data_movie
+            docker volume rm postgres_data_movie   # important , if we don't delete it the old credentials and env variables will be used
             docker run -d \
                 --name movie_db \
                 --network movie_net \
@@ -55,7 +55,6 @@ stages {
                 steps {
                     script {
                     sh """
-                        docker volume rm ./movie-service/                  
                         docker run -d \
                           -e DATABASE_URI=$DATABASE_URI \
                           -e CAST_SERVICE_HOST_URL=$CAST_SERVICE_HOST_URL \
