@@ -76,7 +76,8 @@ stages {
                     script {
                     sh '''
                     echo 'Testing the Movie db-service'
-                    curl http://localhost:8001/api/v1/movies/
+                    curl -s -o /dev/null -w "%{http_code}" localhost:8001/api/v1/movies/
+
                     sleep 10
 
                     '''
