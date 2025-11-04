@@ -4,6 +4,10 @@ DOCKER_ID = "19862020" // replace this with your docker-id
 MOVIE_DOCKER_IMAGE = "movie-image"
 CAST_DOCKER_IMAGE = "cast-image"
 DOCKER_TAG = "v.${BUILD_ID}.0" // we will tag our images with the current build in order to increment the value by 1 with each new build
+// App environment variables
+DATABASE_URI = "postgresql://movie_db_username:movie_db_password@movie_db/movie_db_dev"
+CAST_SERVICE_HOST_URL = "http://cast_service:8000/api/v1/casts/"
+        
 }
 agent any // Jenkins will be able to select all available agents
 stages {
@@ -24,9 +28,13 @@ stages {
                 steps {
                     script {
                     sh '''
-                    docker run -d -p 8001:8000 --name movie-container \
-                $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG \
-                uvicorn app.main:app --host 0.0.0.0 --port 8000 --loop asyncio
+                    docker run -d \
+                        -e DATABASE_URI=$DATABASE_URI \
+                        -e CAST_SERVICE_HOST_URL=$CAST_SERVICE_HOST_URL \
+                        -p 8001:8000 \
+                        --name movie-container \
+                        $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG \
+                        uvicorn app.main:app --reload --host 0.0.0.0 --port 8000 
 
                     sleep 10
                     '''
