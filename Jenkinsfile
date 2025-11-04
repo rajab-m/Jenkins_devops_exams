@@ -44,6 +44,7 @@ stages {
                 -e POSTGRES_DB=POSTGRES_DB \
                 -v postgres_data_movie:/var/lib/postgresql/data/ \
                 postgres:12.1-alpine
+            sleep 10
             '''
         }
     }
