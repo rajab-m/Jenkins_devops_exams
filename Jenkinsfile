@@ -12,7 +12,7 @@ stages {
                 script {
                 sh '''
                  docker rm -f jenkins
-                 docker build -t $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG -f ./movie-service/Dockerfile .
+                 docker build -t $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG ./movie-service
 
                 sleep 6
                 '''
