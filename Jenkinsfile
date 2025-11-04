@@ -7,9 +7,9 @@ DOCKER_TAG = "v.${BUILD_ID}.0" // we will tag our images with the current build 
 // App environment variables
 DATABASE_URI = "postgresql://movie_db_username:movie_db_password@movie_db/movie_db_dev"
 CAST_SERVICE_HOST_URL = "http://cast_service:8000/api/v1/casts/"
-POSTGRES_USER= "movie_db_username"
-POSTGRES_PASSWORD= "movie_db_password"
-POSTGRES_DB= "movie_db_dev"
+POSTGRES_USER = "movie_db_username"
+POSTGRES_PASSWORD = "movie_db_password"
+POSTGRES_DB = "movie_db_dev"
         
 }
 agent any // Jenkins will be able to select all available agents
