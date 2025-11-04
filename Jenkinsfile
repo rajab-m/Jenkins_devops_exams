@@ -64,7 +64,7 @@ stages {
                           --network movie_net \
                           $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG \
                           uvicorn app.main:app --host 0.0.0.0 --port 8000 --loop asyncio --workers 1
-                        sleep 10
+                        sleep 10  # this is really important, without it nothing will work, always wait until the service is ready
                           
                         """
 
@@ -96,7 +96,7 @@ stages {
                 script {
                 sh '''
                 docker login -u $DOCKER_ID -p $DOCKER_PASS
-                docker push $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG
+                docker push $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG
                 '''
                 }
             }
