@@ -18,6 +18,8 @@ stages {
             steps {
                 script {
                 sh '''
+                 DOCKER_PASS = credentials("DOCKER_HUB_PASS")
+                 docker login -u $DOCKER_ID -p $DOCKER_PASS
                  docker rm -f movie-container
                  echo "Building Movie image"
                  docker build -t $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG ./movie-service
