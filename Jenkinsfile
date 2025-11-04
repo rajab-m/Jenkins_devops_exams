@@ -26,7 +26,7 @@ stages {
                     sh '''
                     docker run -d -p 8001:8000 --name movie-container $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG 
 
-                    sleep 20
+                    sleep 10
                     '''
                     }
                 }
