@@ -37,7 +37,8 @@ stages {
             sh '''
             docker network create movie_net || true
             docker rm -f movie_db 
-
+            docker volume rm ./movie-service/
+            docker volume rm postgres_data_movie
             docker run -d \
                 --name movie_db \
                 --network movie_net \
