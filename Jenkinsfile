@@ -96,24 +96,20 @@ stages {
                     }
                 }
             }
-        stage('Run Nginx Container') {
-              steps {
-                script {
-                  // Pull image
-                  sh 'docker pull nginx:latest'
-        
-                  // Run the container with ports and volume mount
-                  sh '''
-                    docker run -d \
-                      --name nginx-container \
-                      --network movie_net \
-                      -p 8080:8080 \
-                      -v ./nginx_config.conf:/etc/nginx/conf.d/default.conf \
-                      nginx:latest
-                  '''
-                }
-              }
+        stage('Test Movie-db Acceptance'){ // we launch the curl command to validate that the container responds to the request
+            steps {
+                    script {
+                    sh '''
+                    echo 'Testing the Movie db-service'
+                    curl -i localhost:8001/api/v1/movies/
+                    sleep 10
+
+                    '''
+                    }
+            }
+
         }
+        
         stage('Docker run Cast-service container'){ // run container from our built image
                 steps {
                     script {
@@ -134,19 +130,38 @@ stages {
                     }
                 }
             }
-
-        stage('Test Acceptance'){ // we launch the curl command to validate that the container responds to the request
+        stage('Test Cast-db Acceptance'){ // we launch the curl command to validate that the container responds to the request
             steps {
                     script {
                     sh '''
                     echo 'Testing the Movie db-service'
-                    curl -i localhost:8001/api/v1/movies/
+                    curl -i localhost:8002/api/v1/casts/
                     sleep 10
 
                     '''
                     }
             }
 
+        }
+
+        
+        stage('Run Nginx Container') {
+              steps {
+                script {
+                  // Pull image
+                  sh 'docker pull nginx:latest'
+        
+                  // Run the container with ports and volume mount
+                  sh '''
+                    docker run -d \
+                      --name nginx-container \
+                      --network movie_net \
+                      -p 8081:8080 \
+                      -v ./nginx_config.conf:/etc/nginx/conf.d/default.conf \
+                      nginx:latest
+                  '''
+                }
+              }
         }
         stage('Docker Push'){ //we pass the built image to our docker hub account
             
