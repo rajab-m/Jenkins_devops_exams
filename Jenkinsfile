@@ -42,7 +42,7 @@ stages {
                 script {
                     sh '''
                     docker network create movie_net || true
-                    docker rm -f movie_db 
+                    #docker rm -f movie_db 
                     #docker volume rm postgres_data_movie   # important , if we don't delete it the old credentials and env variables will be used
                     docker run -d \
                         --name movie_db \
@@ -61,7 +61,7 @@ stages {
             steps {
                 script {
                     sh '''
-                    docker rm -f cast_db 
+                    #docker rm -f cast_db 
                     #docker volume rm postgres_data_cast   # important , if we don't delete it the old credentials and env variables will be used
                     docker run -d \
                         --name cast_db \
@@ -114,7 +114,7 @@ stages {
                 steps {
                     script {
                     sh """
-                        docker rm -f cast-container
+                        #docker rm -f cast-container
                         docker run -d \
                           -e DATABASE_URI=$DATABASE_CAST_URI \
                           -v ./cast-service/:/app/ \
@@ -153,7 +153,7 @@ stages {
         
                   // Run the container with ports and volume mount
                   sh '''
-                    docker rm -f nginx-container
+                    #docker rm -f nginx-container
                     docker run -d \
                       --name nginx-container \
                       --network movie_net \
@@ -178,6 +178,28 @@ stages {
                 }
             }
 
+        }
+        post {
+        always {
+            echo '🧹 Cleaning up Docker containers, networks, and volumes...'
+            script {
+                sh '''
+                # Stop and remove containers if they exist
+                docker rm -f movie-container cast-container nginx-container movie_db cast_db || true
+
+                # Remove network if it exists
+                docker network rm movie_net || true
+
+                # Remove volumes (optional but useful for full cleanup)
+                docker volume rm postgres_data_movie postgres_data_cast || true
+
+                # Remove dangling images and volumes to free up space
+                docker system prune -f --volumes || true
+
+                echo "✅ Cleanup completed successfully!"
+                '''
+            }
+        }
         }
 
 
