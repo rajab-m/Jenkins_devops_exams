@@ -41,9 +41,9 @@ stages {
             docker run -d \
                 --name movie_db \
                 --network movie_net \
-                -e POSTGRES_USER=POSTGRES_USER \
-                -e POSTGRES_PASSWORD=POSTGRES_PASSWORD \
-                -e POSTGRES_DB=POSTGRES_DB \
+                -e POSTGRES_USER=$POSTGRES_USER \
+                -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
+                -e POSTGRES_DB=$POSTGRES_DB \
                 -v postgres_data_movie:/var/lib/postgresql/data/ \
                 postgres:12.1-alpine
             sleep 10
