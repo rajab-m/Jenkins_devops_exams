@@ -11,7 +11,7 @@ stages {
             steps {
                 script {
                 sh '''
-                 docker rm -f jenkins
+                 docker rm -f movie-container
                  docker build -t $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG ./movie-service
 
                 sleep 6
@@ -64,14 +64,5 @@ stages {
 
 
 }
-post { // send email when the job has failed
-    // ..
-    failure {
-        echo "This will run if the job failed"
-        mail to: "rajab_30@hotmail.com",
-             subject: "${env.JOB_NAME} - Build # ${env.BUILD_ID} has failed",
-             body: "For more info on the pipeline failure, check out the console output at ${env.BUILD_URL}"
-    }
-    // ..
-}
+
 }
