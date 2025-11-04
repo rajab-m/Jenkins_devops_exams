@@ -75,7 +75,8 @@ stages {
             steps {
                     script {
                     sh '''
-                    curl localhost:8001
+                    echo 'Testing the Movie db-service'
+                    curl -i localhost:8001/api/v1/movies/
                     '''
                     }
             }
