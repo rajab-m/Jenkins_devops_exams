@@ -24,7 +24,9 @@ stages {
                 steps {
                     script {
                     sh '''
-                    docker run -d -p 8001:8000 --name movie-container $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG 
+                    docker run -d -p 8001:8000 --name movie-container \
+    $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG \
+    uvicorn app.main:app --host 0.0.0.0 --port 8000 --loop asyncio
 
                     sleep 10
                     '''
