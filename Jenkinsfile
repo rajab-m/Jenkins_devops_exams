@@ -179,31 +179,32 @@ stages {
             }
 
         }
-        post {
-        always {
-            echo '🧹 Cleaning up Docker containers, networks, and volumes...'
-            script {
-                sh '''
-                # Stop and remove containers if they exist
-                docker rm -f movie-container cast-container nginx-container movie_db cast_db || true
-
-                # Remove network if it exists
-                docker network rm movie_net || true
-
-                # Remove volumes (optional but useful for full cleanup)
-                docker volume rm postgres_data_movie postgres_data_cast || true
-
-                # Remove dangling images and volumes to free up space
-                docker system prune -f --volumes || true
-
-                echo "✅ Cleanup completed successfully!"
-                '''
-            }
-        }
-        }
+        
 
 
 
+}
+post {
+always {
+    echo '🧹 Cleaning up Docker containers, networks, and volumes...'
+    script {
+        sh '''
+        # Stop and remove containers if they exist
+        docker rm -f movie-container cast-container nginx-container movie_db cast_db || true
+
+        # Remove network if it exists
+        docker network rm movie_net || true
+
+        # Remove volumes (optional but useful for full cleanup)
+        docker volume rm postgres_data_movie postgres_data_cast || true
+
+        # Remove dangling images and volumes to free up space
+        docker system prune -f --volumes || true
+
+        echo "✅ Cleanup completed successfully!"
+        '''
+    }
+}
 }
 
 }
