@@ -64,6 +64,7 @@ stages {
                           --network movie_net \
                           $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG \
                           uvicorn app.main:app --host 0.0.0.0 --port 8000 --loop asyncio --workers 1
+                        sleep 10
                           
                         """
 
@@ -76,8 +77,7 @@ stages {
                     script {
                     sh '''
                     echo 'Testing the Movie db-service'
-                    curl -i 172.31.26.223:8001/api/v1/movies/
-
+                    curl -i localhost:8001/api/v1/movies/
                     sleep 10
 
                     '''
