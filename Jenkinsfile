@@ -1,6 +1,6 @@
 pipeline {
 environment { // Declaration of environment variables
-DOCKER_ID = "rajabm1311" // replace this with your docker-id
+DOCKER_ID="rajabm1311" // replace this with your docker-id
 MOVIE_DOCKER_IMAGE = "movie-image"
 CAST_DOCKER_IMAGE = "cast-image"
 DOCKER_TAG = "v.${BUILD_ID}.0" // we will tag our images with the current build in order to increment the value by 1 with each new build
