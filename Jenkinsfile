@@ -10,7 +10,7 @@ CAST_SERVICE_HOST_URL="http://cast_service:8000/api/v1/casts/"
 POSTGRES_USER="movie_db_username"
 POSTGRES_PASSWORD="movie_db_password"
 POSTGRES_DB="movie_db_dev"
-        
+DOCKER_PASS = credentials("DOCKER_HUB_PASS") // we retrieve docker password from secret text called docker_hub_pass saved on jenkins        
 }
 agent any // Jenkins will be able to select all available agents
 stages {
@@ -18,7 +18,6 @@ stages {
             steps {
                 script {
                 sh '''
-                 DOCKER_PASS = credentials("DOCKER_HUB_PASS")
                  docker login -u $DOCKER_ID -p $DOCKER_PASS
                  docker rm -f movie-container
                  echo "Building Movie image"
