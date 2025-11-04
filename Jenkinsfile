@@ -7,7 +7,7 @@ DOCKER_TAG = "v.${BUILD_ID}.0" // we will tag our images with the current build 
 }
 agent any // Jenkins will be able to select all available agents
 stages {
-        stage('Docker Build Movie Service'){ // docker build image stage
+        stage('Docker Build Movie Service'){ // docker build image stage 
             steps {
                 script {
                 sh '''
