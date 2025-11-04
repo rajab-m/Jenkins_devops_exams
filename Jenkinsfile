@@ -35,10 +35,12 @@ stages {
     steps {
         script {
             sh '''
+            docker network create movie_net || true
             docker rm -f movie_db 
 
             docker run -d \
                 --name movie_db \
+                --network movie_net \
                 -e POSTGRES_USER=POSTGRES_USER \
                 -e POSTGRES_PASSWORD=POSTGRES_PASSWORD \
                 -e POSTGRES_DB=POSTGRES_DB \
@@ -59,6 +61,7 @@ stages {
                           -v ./movie-service/:/app/ \
                           -p 8001:8000 \
                           --name movie-container \
+                          --network movie_net \
                           $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG \
                           uvicorn app.main:app --host 0.0.0.0 --port 8000 --loop asyncio --workers 1
                           
