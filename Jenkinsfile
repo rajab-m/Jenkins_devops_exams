@@ -1,46 +1,75 @@
 pipeline {
-    agent any  // Run on any available Jenkins agent
-
-    stages {
-        stage('Setup') {
+environment { // Declaration of environment variables
+DOCKER_ID = "19862020" // replace this with your docker-id
+MOVIE_DOCKER_IMAGE = "movie-image"
+CAST_DOCKER_IMAGE = "cast-image"
+DOCKER_TAG = "v.${BUILD_ID}.0" // we will tag our images with the current build in order to increment the value by 1 with each new build
+}
+agent any // Jenkins will be able to select all available agents
+stages {
+        stage('Docker Build Movie Service'){ // docker build image stage
             steps {
-                echo 'Setting up environment...'
+                script {
+                sh '''
+                 docker rm -f jenkins
+                 docker build -t $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG -f ./movie-service/Dockerfile .
+
+                sleep 6
+                '''
+                }
             }
         }
-
-        stage('Build') {
-            steps {
-                echo 'Building the project...'
-                // You can add build commands here, e.g.:
-                // sh 'make build' or sh 'python setup.py build'
+    
+        stage('Docker run Movie Service'){ // run container from our built image
+                steps {
+                    script {
+                    sh '''
+                    docker run -d -p 8001:8000 --name movie-container $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG
+                    sleep 10
+                    '''
+                    }
+                }
             }
+
+        stage('Test Acceptance'){ // we launch the curl command to validate that the container responds to the request
+            steps {
+                    script {
+                    sh '''
+                    curl localhost:8001
+                    '''
+                    }
+            }
+
+        }
+        stage('Docker Push'){ //we pass the built image to our docker hub account
+            environment
+            {
+                DOCKER_PASS = credentials("DOCKER_HUB_PASS") // we retrieve docker password from secret text called docker_hub_pass saved on jenkins
+            }
+
+            steps {
+
+                script {
+                sh '''
+                docker login -u $DOCKER_ID -p $DOCKER_PASS
+                docker push $DOCKER_ID/$DOCKER_IMAGE:$DOCKER_TAG
+                '''
+                }
+            }
+
         }
 
-        stage('Test') {
-            steps {
-                echo 'Running tests...'
-                // You can replace this with real test commands
-                // sh 'pytest tests/'
-            }
-        }
 
-        stage('Deploy') {
-            steps {
-                echo 'Deploying application...'
-                // This is just a placeholder
-            }
-        }
+
+}
+post { // send email when the job has failed
+    // ..
+    failure {
+        echo "This will run if the job failed"
+        mail to: "rajab_30@hotmail.com",
+             subject: "${env.JOB_NAME} - Build # ${env.BUILD_ID} has failed",
+             body: "For more info on the pipeline failure, check out the console output at ${env.BUILD_URL}"
     }
-
-    post {
-        success {
-            echo 'Pipeline completed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed!'
-        }
-        always {
-            echo 'Cleaning up...'
-        }
-    }
+    // ..
+}
 }
