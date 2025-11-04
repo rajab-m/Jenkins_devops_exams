@@ -53,7 +53,7 @@ stages {
                     script {
                     sh '''
 
-                    docker run -d \
+                    docker run \
                         -e DATABASE_URI=$DATABASE_URI \
                         -e CAST_SERVICE_HOST_URL=$CAST_SERVICE_HOST_URL \
                         -v ./movie-service/:/app/ \
