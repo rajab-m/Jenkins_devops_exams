@@ -134,7 +134,7 @@ stages {
             steps {
                     script {
                     sh '''
-                    echo 'Testing the Movie db-service'
+                    echo 'Testing the Cast db-service'
                     curl -i localhost:8002/api/v1/casts/
                     sleep 10
 
@@ -153,7 +153,7 @@ stages {
         
                   // Run the container with ports and volume mount
                   sh '''
-                    docker rm -f movie-container
+                    docker rm -f nginx-container
                     docker run -d \
                       --name nginx-container \
                       --network movie_net \
