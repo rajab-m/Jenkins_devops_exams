@@ -153,6 +153,7 @@ stages {
         
                   // Run the container with ports and volume mount
                   sh '''
+                    docker rm -f movie-container
                     docker run -d \
                       --name nginx-container \
                       --network movie_net \
