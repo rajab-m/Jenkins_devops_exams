@@ -106,7 +106,7 @@ stages {
                   sh '''
                     docker run -d \
                       --name nginx-container \
-                      --network movie_net
+                      --network movie_net \
                       -p 8080:8080 \
                       -v ./nginx_config.conf:/etc/nginx/conf.d/default.conf \
                       nginx:latest
