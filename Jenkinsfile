@@ -214,6 +214,9 @@ stages {
         }
 
         stage('Deployment in production') {
+            when {
+                branch 'master'
+            }
             environment {
                 KUBECONFIG = credentials("config")
             }
