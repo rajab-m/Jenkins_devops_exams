@@ -175,7 +175,7 @@ stages {
                     mkdir .kube
                     cat $KUBECONFIG > .kube/config
                     # Use values-dev.yaml instead of modifying values.yaml
-                    helm upgrade --install movie-app ./movie-app-helm --values=./movie-app-helm/values-dev.yaml --namespace movie-app-dev --create-namespace
+                    helm upgrade --install movie-app ./movie-app-chart --values=./movie-app-chart/values-dev.yaml --namespace movie-app-dev --create-namespace
                     '''
                 }
             }
@@ -191,7 +191,7 @@ stages {
                     rm -Rf .kube
                     mkdir .kube
                     cat $KUBECONFIG > .kube/config
-                    helm upgrade --install movie-app ./movie-app-helm --values=./movie-app-helm/values-qa.yaml --namespace movie-app-qa --create-namespace
+                    helm upgrade --install movie-app ./movie-app-chart --values=./movie-app-chart/values-qa.yaml --namespace movie-app-qa --create-namespace
                     '''
                 }
             }
@@ -207,7 +207,7 @@ stages {
                     rm -Rf .kube
                     mkdir .kube
                     cat $KUBECONFIG > .kube/config
-                    helm upgrade --install movie-app ./movie-app-helm --values=./movie-app-helm/values-stag.yaml --namespace movie-app-staging --create-namespace
+                    helm upgrade --install movie-app ./movie-app-chart --values=./movie-app-chart/values-stag.yaml --namespace movie-app-staging --create-namespace
                     '''
                 }
             }
@@ -227,7 +227,7 @@ stages {
                     rm -Rf .kube
                     mkdir .kube
                     cat $KUBECONFIG > .kube/config
-                    helm upgrade --install movie-app ./movie-app-helm --values=./movie-app-helm/values-prod.yaml --namespace movie-app-prod --create-namespace
+                    helm upgrade --install movie-app ./movie-app-chart --values=./movie-app-chart/values-prod.yaml --namespace movie-app-prod --create-namespace
                     '''
                 }
             }
