@@ -1,0 +1,93 @@
+# QA Environment
+namespace: movie-app-qa
+
+# Database Images
+postgresImage:
+  repository: postgres
+  tag: "12.1-alpine"
+  pullPolicy: IfNotPresent
+
+# Movie Database
+movieDb:
+  enabled: true
+  replicas: 1
+  username: movie_db_username
+  password: movie_db_password
+  database: movie_db
+  storageSize: 2Gi
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "200m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+
+# Cast Database
+castDb:
+  enabled: true
+  replicas: 1
+  username: cast_db_username
+  password: cast_db_password
+  database: cast_db
+  storageSize: 2Gi
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "200m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+
+# Movie Service
+movieService:
+  enabled: true
+  replicas: 2
+  image: rajabm1311/movie-image:v.93.0
+  imagePullPolicy: IfNotPresent
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "200m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPU: 70
+
+# Cast Service
+castService:
+  enabled: true
+  replicas: 2
+  image: rajabm1311/cast-image:v.93.0
+  imagePullPolicy: IfNotPresent
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "200m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPU: 70
+
+# Nginx
+nginx:
+  enabled: true
+  replicas: 1
+  image: nginx:latest
+  imagePullPolicy: IfNotPresent
+  configPath: "/home/ubuntu/Jenkins_devops_exams/nginx_config.conf"
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"

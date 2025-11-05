@@ -1,0 +1,58 @@
+{{- if .Values.castDb.enabled }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: cast-db
+  namespace: {{ .Values.namespace }}
+spec:
+  serviceName: cast-db
+  replicas: {{ .Values.castDb.replicas }}
+  selector:
+    matchLabels:
+      app: cast-db
+  template:
+    metadata:
+      labels:
+        app: cast-db
+    spec:
+      containers:
+        - name: cast-db
+          image: "{{ .Values.postgresImage.repository }}:{{ .Values.postgresImage.tag }}"
+          imagePullPolicy: {{ .Values.postgresImage.pullPolicy }}
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.castDb.username }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.castDb.password }}
+            - name: POSTGRES_DB
+              value: {{ .Values.castDb.database }}
+          volumeMounts:
+            - name: cast-db-storage
+              mountPath: /var/lib/postgresql/data
+          resources:
+            {{- toYaml .Values.castDb.resources | nindent 12 }}
+  volumeClaimTemplates:
+    - metadata:
+        name: cast-db-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.castDb.storageSize }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cast-db
+  namespace: {{ .Values.namespace }}
+spec:
+  clusterIP: None
+  selector:
+    app: cast-db
+  ports:
+    - port: 5432
+      targetPort: 5432
+{{- end }}
