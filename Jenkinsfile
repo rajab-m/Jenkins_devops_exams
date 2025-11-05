@@ -164,6 +164,74 @@ stages {
                 }
               }
         }
+        stage('Deployment in dev') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }
+            steps {
+                script {
+                    sh '''
+                    rm -Rf .kube
+                    mkdir .kube
+                    cat $KUBECONFIG > .kube/config
+                    # Use values-dev.yaml instead of modifying values.yaml
+                    helm upgrade --install movie-app ./movie-app-helm --values=./movie-app-helm/values-dev.yaml --namespace movie-app-dev --create-namespace
+                    '''
+                }
+            }
+        }
+
+        stage('Deployment in QA') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }
+            steps {
+                script {
+                    sh '''
+                    rm -Rf .kube
+                    mkdir .kube
+                    cat $KUBECONFIG > .kube/config
+                    helm upgrade --install movie-app ./movie-app-helm --values=./movie-app-helm/values-qa.yaml --namespace movie-app-qa --create-namespace
+                    '''
+                }
+            }
+        }
+
+        stage('Deployment in staging') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }
+            steps {
+                script {
+                    sh '''
+                    rm -Rf .kube
+                    mkdir .kube
+                    cat $KUBECONFIG > .kube/config
+                    helm upgrade --install movie-app ./movie-app-helm --values=./movie-app-helm/values-stag.yaml --namespace movie-app-staging --create-namespace
+                    '''
+                }
+            }
+        }
+
+        stage('Deployment in production') {
+            environment {
+                KUBECONFIG = credentials("config")
+            }
+            steps {
+                // Manual approval for production
+                timeout(time: 15, unit: "MINUTES") {
+                    input message: 'Do you want to deploy to production?', ok: 'Yes'
+                }
+                script {
+                    sh '''
+                    rm -Rf .kube
+                    mkdir .kube
+                    cat $KUBECONFIG > .kube/config
+                    helm upgrade --install movie-app ./movie-app-helm --values=./movie-app-helm/values-prod.yaml --namespace movie-app-prod --create-namespace
+                    '''
+                }
+            }
+        }
         stage('Docker Push'){ //we pass the built image to our docker hub account
             
 
