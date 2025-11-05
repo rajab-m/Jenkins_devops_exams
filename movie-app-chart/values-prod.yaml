@@ -86,7 +86,7 @@ nginx:
   configPath: "/home/ubuntu/Jenkins_devops_exams/nginx_config.conf"
   service:
     type: NodePort
-    nodePort: 30080
+    nodePort: 30083
   resources:
     requests:
       memory: "128Mi"
