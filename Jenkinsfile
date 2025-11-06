@@ -18,7 +18,7 @@ DOCKER_PASS = credentials("DOCKER_HUB_PASS") // we retrieve docker password from
 }
 agent any // Jenkins will be able to select all available agents
 stages {
-        stage('Docker Build'){ // docker build image stage 
+        stage('Docker Build: Movie image and Casts image'){ // docker build image stage 
             steps {
                 script {
                 sh '''
@@ -37,7 +37,7 @@ stages {
             }
         }
     
-        stage('Start Movie DB container') {
+        stage('Docker run Movie DB container') {
             steps {
                 script {
                     sh '''
@@ -57,7 +57,7 @@ stages {
                 }
             }
         }
-        stage('Start Cast DB container') {
+        stage('Docker run Cast DB container') {
             steps {
                 script {
                     sh '''
@@ -163,6 +163,19 @@ stages {
                   '''
                 }
               }
+        }
+        stage('Test Nginx Acceptance'){ // we launch the curl command to validate that the container responds to the request
+            steps {
+                    script {
+                    sh '''
+                    echo 'Testing the Nginx service'
+                    curl -i localhost:8081/api/v1/casts/docs/
+                    sleep 10
+
+                    '''
+                    }
+            }
+
         }
         stage('Deployment in dev') {
             environment {
