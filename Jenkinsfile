@@ -158,7 +158,7 @@ stages {
                       --name nginx-container \
                       --network movie_net \
                       -p 8081:8080 \
-                      -v ./nginx_config.conf:/etc/nginx/conf.d/default.conf \
+                      -v ./nginx_config_compose.conf:/etc/nginx/conf.d/default.conf \
                       nginx:latest
                     sleep 10
                   '''
@@ -280,7 +280,7 @@ always {
         # Remove network if it exists
         docker network rm movie_net || true
 
-        # Remove volumes (optional but useful for full cleanup)
+        # Remove volumes 
         docker volume rm postgres_data_movie postgres_data_cast || true
 
         # Remove dangling images and volumes to free up space
