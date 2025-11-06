@@ -14,7 +14,8 @@ POSTGRES_DB="movie_db_dev"
 CAST_POSTGRES_USER="cast_db_username"
 CAST_POSTGRES_PASSWORD="cast_db_password"
 CAST_POSTGRES_DB="cast_db_dev"
-DOCKER_PASS = credentials("DOCKER_HUB_PASS") // we retrieve docker password from secret text called docker_hub_pass saved on jenkins        
+DOCKER_PASS = credentials("DOCKER_HUB_PASS") // we retrieve docker password from secret text called docker_hub_pass saved on jenkins     
+KUBECONFIG = credentials("config")
 }
 agent any // Jenkins will be able to select all available agents
 stages {
@@ -179,9 +180,7 @@ stages {
 
         }
         stage('Deployment in dev') {
-            environment {
-                KUBECONFIG = credentials("config")
-            }
+
             steps {
                 script {
                     sh '''
@@ -196,9 +195,7 @@ stages {
         }
 
         stage('Deployment in QA') {
-            environment {
-                KUBECONFIG = credentials("config")
-            }
+
             steps {
                 script {
                     sh '''
@@ -212,9 +209,7 @@ stages {
         }
 
         stage('Deployment in staging') {
-            environment {
-                KUBECONFIG = credentials("config")
-            }
+
             steps {
                 script {
                     sh '''
@@ -231,9 +226,7 @@ stages {
             when {
                 branch 'master'
             }
-            environment {
-                KUBECONFIG = credentials("config")
-            }
+
             steps {
                 // Manual approval for production
                 timeout(time: 15, unit: "MINUTES") {
