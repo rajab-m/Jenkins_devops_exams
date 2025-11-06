@@ -160,6 +160,7 @@ stages {
                       -p 8081:8080 \
                       -v ./nginx_config.conf:/etc/nginx/conf.d/default.conf \
                       nginx:latest
+                    sleep 10
                   '''
                 }
               }
