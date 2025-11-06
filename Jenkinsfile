@@ -286,6 +286,11 @@ always {
         # Remove dangling images and volumes to free up space
         docker system prune -f --volumes || true
 
+        helm uninstall movie-app --namespace movie-app-dev
+        helm uninstall movie-app --namespace movie-app-qa
+        helm uninstall movie-app --namespace movie-app-staging
+        helm uninstall movie-app --namespace movie-app-prod
+
         echo "✅ Cleanup completed successfully!"
         '''
     }
