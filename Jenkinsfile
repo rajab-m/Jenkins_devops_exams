@@ -179,6 +179,21 @@ stages {
             }
 
         }
+        stage('Docker Push'){ //we pass the built image to our docker hub account
+            
+
+            steps {
+
+                script {
+                sh '''
+                docker login -u $DOCKER_ID -p $DOCKER_PASS
+                docker push $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG
+                docker push $DOCKER_ID/$CAST_DOCKER_IMAGE:$DOCKER_TAG
+                '''
+                }
+            }
+
+        }
         stage('Deployment in dev') {
 
             steps {
@@ -242,21 +257,7 @@ stages {
                 }
             }
         }
-        stage('Docker Push'){ //we pass the built image to our docker hub account
-            
-
-            steps {
-
-                script {
-                sh '''
-                docker login -u $DOCKER_ID -p $DOCKER_PASS
-                docker push $DOCKER_ID/$MOVIE_DOCKER_IMAGE:$DOCKER_TAG
-                docker push $DOCKER_ID/$CAST_DOCKER_IMAGE:$DOCKER_TAG
-                '''
-                }
-            }
-
-        }
+        
         
 
 
